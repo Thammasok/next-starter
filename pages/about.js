@@ -1,17 +1,15 @@
-import DefaultLayout from '../components/Layouts/DefaultLayout';
+import {Component} from 'react'
 
-const about = () => (
-  <DefaultLayout>
-    <h1>About Page</h1>
-    <p>This is the about page</p>
-    <style jsx>
-      {`
-        p {
-          color: #FF0000;
-        }
-      `}
-    </style>
-  </DefaultLayout>
-);
+import DefaultAppLayout from '../components/Layout/DefaultApp';
 
-export default about;
+class About extends Component {
+  render () {
+    return (
+      <DefaultAppLayout>
+        <h1>About</h1>
+      </DefaultAppLayout>
+    )
+  }
+}
+
+export default About

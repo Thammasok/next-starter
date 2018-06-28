@@ -1,29 +1,29 @@
-import DefaultLayout from '../components/Layouts/DefaultLayout';
+import {Component} from 'react'
+import fetch from 'isomorphic-unfetch'
 
-const Post = (props) => (
-  <DefaultLayout>
-    <h1>{props.url.query.title ? props.url.query.title : props.data.page_id}</h1>
-    <p>This is the blog post content.</p>
-    <hr />
-    <span>Fetched data</span> 
-    <br/> 
-    <span>
-      {props.data.name} : {props.data.page_id}
-    </span>
-  </DefaultLayout>
-);
+import DefaultAppLayout from '../components/Layout/DefaultApp'
+
+
+class Post extends Component {
+  render() {
+    return(
+      <DefaultAppLayout>
+        <h1>{this.props.show.name}</h1>
+        <p>{this.props.show.summary.replace(/<[/]?p>/g, '')}</p>
+        <img src={this.props.show.image.medium}/>
+      </DefaultAppLayout>
+    )
+  }
+}
 
 Post.getInitialProps = async function (context) {
-  // รับค่า ID จาก url เข้ามา ในกรณี Reload page
-  let { id } = context.query;
-  const data = await {
-    name: "Thammasok",
-    page_id: id
-  };
+  const { id } = context.query
+  const res = await fetch(`https://api.tvmaze.com/shows/${id}`)
+  const show = await res.json()
 
-  // console.log(`Fetched data: ${data.name}`);
+  console.log(`Fetched show: ${show.name}`)
 
-  return { data };
-};
+  return { show }
+}
 
-export default Post;
+export default Post

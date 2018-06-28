@@ -1,62 +1,54 @@
-import Link from 'next/link';
-import DefaultLayout from '../components/Layouts/DefaultLayout';
-import SearchTool from '../components/SearchTool';
+import {Component} from 'react'
+import Link from 'next/link'
+import fetch from 'isomorphic-unfetch'
 
-const PostLink = (props) => (
-  <li>
-    <Link as={`/p/${props.id}`} href={`/post?title=${props.title}`}>
-      <a>{props.title}</a>
-    </Link>
-  </li>
-);
+import DefaultAppLayout from '../components/Layout/DefaultApp';
 
-function getPosts () {
-  return [
-    { id: 'hello-nextjs', title: 'Hello Next.js'},
-    { id: 'learn-nextjs', title: 'Learn Next.js is awesome'},
-    { id: 'deploy-nextjs', title: 'Deploy apps with ZEIT'},
-  ]
+class Index extends Component {
+  render () {
+    
+    const PostLink = (props) => (
+      <li>
+        <Link as={`/p/${props.id}`} href={`/post?title=${props.title}`}>
+          <a>{props.title}</a>
+        </Link>
+      </li>
+    )
+
+    return (
+      <DefaultAppLayout>
+        <h1>Hello Next.js</h1>
+        <hr />
+        <ul>
+          <PostLink id="hello-nextjs" title="Hello Next.js"/>
+          <PostLink id="learn-nextjs" title="Learn Next.js is awesome"/>
+          <PostLink id="deploy-nextjs" title="Deploy apps with Zeit"/>
+        </ul>
+        <hr />
+        <h1>Batman TV Shows</h1>
+        <ul>
+          {this.props.shows.map(({show}) => (
+            <li key={show.id}>
+              <Link as={`/p/${show.id}`} href={`/post?id=${show.id}`}>
+                <a>{show.name}</a>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </DefaultAppLayout>
+    )
+  }
 }
 
-const Index = (props) => (
-  <DefaultLayout>
-    <section>
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-12">
-            <h1>Find and book unique 
-            <span className="inline-block typed-text typed-text--cursor color--primary" data-typed-strings="hotels,loft apartments,yurts,experiences,apartments,hostels,camp sites,luxury yachts"> accommodation</span>
-            <br className="hidden-xs" />in over 100 countries.</h1>
-          </div>
-        </div>
-      </div>
-    </section>
-    <SearchTool />
-    <p>This is Tutorials</p>
-    <h1>My Blogs</h1>
-    <ul>
-      {getPosts().map((post, index) => (
-        <PostLink key={index} id={post.id} title={post.title}/>
-      ))}
-      
-    </ul>
-    <hr />
-    <span>Fetched data</span> 
-    <br/> 
-    <span>
-      {props.shows.name}
-    </span>
-  </DefaultLayout>
-);
+Index.getInitialProps = async function() {
+  const res = await fetch('https://api.tvmaze.com/search/shows?q=batman')
+  const data = await res.json()
 
-Index.getInitialProps = async function (context) {
-  const data = await {
-    name: "Thammasok"
-  };
+  console.log(`Show data fetched. Count: ${data.length}`)
 
   return {
     shows: data
   }
-};
+}
 
-export default Index;
+export default Index
