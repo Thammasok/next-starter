@@ -17,7 +17,7 @@ class Index extends Component {
 
     return (
       <DefaultAppLayout>
-        <h1>Hello Next.js</h1>
+        <h1>Hello</h1>
         <hr />
         <ul>
           <PostLink id="hello-nextjs" title="Hello Next.js"/>
