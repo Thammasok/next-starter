@@ -4,6 +4,11 @@ import localStorage from 'localStorage'
 import { I18nextProvider } from 'react-i18next'
 import { translate } from 'react-i18next'
 
+import { Provider } from 'react-redux'
+import withRedux from 'next-redux-wrapper'
+import withReduxSaga from 'next-redux-saga'
+import createStore from '../store_example/store'
+
 import { getTranslation } from '../tools/translationHelpers'
 import startI18n from '../tools/startI18n'
 import localFile from '../static/locales/local'
@@ -20,12 +25,14 @@ class MyApp extends App {
   }
 
   render () {
-    const {Component, pageProps, reduxStore} = this.props
+    const { Component, pageProps, store } = this.props
     return (
       <Container>
-        <I18nextProvider i18n={this.i18n}>
-          <Component {...pageProps} />
-        </I18nextProvider>
+        <Provider store={store}>
+          <I18nextProvider i18n={this.i18n}>
+            <Component {...pageProps} />
+          </I18nextProvider>
+        </Provider>
       </Container>
     )
   }
@@ -41,4 +48,4 @@ MyApp.getInitialProps = async function() {
   return { translations: translations }
 }
 
-export default MyApp
+export default withRedux(createStore)(withReduxSaga({ async: true })(MyApp))
